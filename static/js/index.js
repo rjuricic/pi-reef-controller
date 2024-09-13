@@ -1,4 +1,5 @@
-NUM_RELAY_PORTS = 8;
+NUM_RELAY_PORTS = 16;
+NUM_LED_ROWS =7;
 
 function setRelay(relay, status) {
     console.log("Executing setRelay");
@@ -38,6 +39,13 @@ function toggleAll() {
     }
 }
 
+function turnLigths() {
+    console.log("Turning LED lights");
+    for (var i = 1; i < NUM_LED_ROWS +1; i++) {
+        toggleRelay(i);
+    }
+}
+
 function callApi(url) {
     console.log("Executing callApi");
     $.get(url, function () {
@@ -47,7 +55,7 @@ function callApi(url) {
     }).fail(function () {
         console.error("Relay status failure");
         swal({
-            title: "Pi Relay Controller",
+            title: "PI Reef controller",
             text: "Server returned an error",
             type: "error"
         });
@@ -66,7 +74,7 @@ function getRelayStatus(relay) {
     }).fail(function () {
         console.error("Relay status failure");
         swal({
-            title: "Pi Relay Controller",
+            title: "Pi Reef Controller",
             text: "Server returned an error",
             type: "error"
         });

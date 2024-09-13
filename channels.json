@@ -2,51 +2,114 @@
     "channels": [
         {
             "visible": true,
-            "active": "true",
+            "light": true,
+            "active": "false",
             "channel": 1,
-            "name": "Focus Controller"
+            "name": "LED Row 1"
         },
         {
             "visible": true,
-            "active": "true",
+            "light": true,
+            "active": "false",
             "channel": 2,
-            "name": "CCD"
+            "name": "LED Row 2"
         },
         {
-            "visible": false,
+            "visible": true,
+            "light": true,
             "active": "false",
             "channel": 3,
-            "name": "Relay 3"
+            "name": "LED Row  3"
         },
         {
-            "visible": false,
+            "visible": true,
+            "light": true,
             "active": "false",
             "channel": 4,
-            "name": "Relay 4"
+            "name": "LED Row  4"
+        },
+        {
+            "visible": true,
+            "light": true,
+            "active": "false",
+            "channel": 5,
+            "name": "LED Row  5"
+        },
+        {
+            "visible": true,
+            "light": true,
+            "active": "false",
+            "channel": 6,
+            "name": "LED Row 6"
+        },
+        {
+            "visible": true,
+            "light": true,
+            "active": "false",
+            "channel": 7,
+            "name": "LED Row 7"
+        },
+        {
+            "visible": true,
+            "light": false,
+            "active": "true",
+            "channel": 8,
+            "name": "Skimmer"
+        },
+        {
+            "visible": true,
+            "light": false,
+            "active": "true",
+            "channel": 9,
+            "name": "Heater"
+        },
+        {
+            "visible": true,
+            "light": false,
+            "active": "true",
+            "channel": 10,
+            "name": "UV Sterilization"
+        },
+        {
+            "visible": true,
+            "light": false,
+            "active": "true",
+            "channel": 11,
+            "name": "Return pump"
+        },        {
+            "visible": true,
+            "light": false,
+            "active": "true",
+            "channel": 12,
+            "name": "Wave maker"
+        },
+        {
+            "visible": true,
+            "light": false,
+            "active": "true",
+            "channel": 13,
+            "name": "Dosing unit"
+        },
+        {
+            "visible": true,
+            "light": false,
+            "active": "true",
+            "channel": 14,
+            "name": "ATo Top up"
         },
         {
             "visible": false,
+            "light": false,
             "active": "false",
-            "channel": 5,
-            "name": "Relay 5"
+            "channel": 15,
+            "name": "Not in use 15"
         },
         {
-            "visible": true,
-            "active": "true",
-            "channel": 6,
-            "name": "Mount"
-        },
-        {
-            "visible": true,
-            "active": "true",
-            "channel": 7,
-            "name": "USB Power"
-        },
-        {
-            "visible": true,
-            "active": "true",
-            "channel": 8,
-            "name": "Dew Controller"
+            "visible": false,
+            "light": false,
+            "active": "false",
+            "channel": 16,
+            "name": "Not in use 16"
         }
 
     ]

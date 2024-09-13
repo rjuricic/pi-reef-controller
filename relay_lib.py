@@ -21,7 +21,7 @@ GPIO.setmode(GPIO.BOARD)
 
 # The number of relay ports on the relay board.
 # This value should never change!
-NUM_RELAY_PORTS = 8
+NUM_RELAY_PORTS = 16
 RELAY_PORTS = ()
 RELAY_STATUS = NUM_RELAY_PORTS * [0]
 
@@ -118,6 +118,16 @@ def relay_all_off(relay_ports=RELAY_PORTS):
         RELAY_STATUS[i_relay] = OFF_STATE
         time.sleep(DELAY_TIME)
 
+def relay_light_on(relay_ports=RELAY_PORTS):
+    """Turn LED lights on.
+
+     Call this function to turn led lights on.
+     """
+    print('Turning LED lights ON')
+    for i_relay, relay in enumerate(relay_ports):
+        GPIO.output(relay, ON_STATE)
+        RELAY_STATUS[i_relay] = ON_STATE
+        time.sleep(DELAY_TIME)
 
 def relay_toggle_port(relay_num):
     """Toggle the specified relay (on to off, or off to on).
@@ -144,7 +154,7 @@ def relay_toggle_all_port(relay_num):
     Args:
         relay_num (int): The relay number to toggle.
     """
-    for i_relay, relay in enumerate(relay_ports):
+    for i_relay, relay in enumerate(relay_ports=RELAY_PORTS):
         print('Toggling relay:', relay_num)
         if relay_get_port_status(relay_num):
             relay_off(relay_num)

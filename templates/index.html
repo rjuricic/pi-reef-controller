@@ -4,56 +4,114 @@
 {{ super() }}
 <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 <link href="{{ url_for('static', filename='css/sweetalert2.css') }}" rel="stylesheet">
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    setInterval(updateTime, 1000);
+    updateTime();
+    setInterval(updateRelayStatuses, 5000);  // Update relay statuses every 5 seconds
+    updateRelayStatuses();  // Initial update
+});
+
+function updateTime() {
+    fetch('/current_time')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('current-time').innerText = data.time;
+        });
+}
+
+function updateRelayStatuses() {
+    fetch('/relay_statuses')
+        .then(response => response.json())
+        .then(data => {
+            data.statuses.forEach(status => {
+                document.getElementById(`status-${status.channel}`).innerText = status.state;
+            });
+        });
+}
+
+function updateSchedule(channel) {
+    const onTime = document.getElementById(`on-time-${channel}`).value;
+    const offTime = document.getElementById(`off-time-${channel}`).value;
+    const useSchedule = document.getElementById(`use-schedule-${channel}`).checked;
+
+    fetch(`/update_schedule/${channel}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            on_time: onTime,
+            off_time: offTime,
+            use_schedule: useSchedule
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.msg === "success") {
+            alert('Schedule updated successfully');
+        } else {
+            alert('Failed to update schedule');
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+</script>
 {% endblock %}
 
 {% block title %}{{ relay_name }}{% endblock %}
 
-
 {% block page_content %}
+<div>
+    <h4>Current Time: <span id="current-time"></span></h4>
+</div>
 <table class="table table-bordered">
   <tbody>
-
-    {% for val in channel_info  %}
-{% set i_channel = val['channel'] %}
-      {% if val["visible"] %}
-      <tr>
-             <th scope="row">{{ val['name'] }} <br> Relay {{ val['channel'] }}</th>
-        <td>
-          <div class="btn-group-lg" role="group" aria-label="Relay {{ i_channel }}">
-            <button type="button" class="btn btn-success" id="on-{{ i_channel }}" onclick="setRelay({{ i_channel }}, 'on');">On</button>
-            <button type="button" class="btn btn-danger" id="off-{{ i_channel }}" onclick="setRelay({{ i_channel }}, 'off');">Off
-            </button>
-            <button type="button" class="btn btn-warning" id="reboot-{{ i_channel }}" onclick="setRelay({{ i_channel }}, 'reboot');">Reboot
-            </button>
-            <button type="button" class="btn btn-info" id="toggle-{{ i_channel }}" onclick="toggleRelay({{ i_channel }});">Toggle
-            </button>
-            <button type="button" class="btn btn-secondary" id="data-1" onclick="getRelayStatus({{ i_channel }});">
-              Status
-            </button>
-          </div>
-        </td>
-      </tr>
-      {% endif %}
+    {% for val in channel_info %}
+    {% set i_channel = val['channel'] %}
+    {% if val["visible"] %}
+    <tr>
+      <th scope="row">
+        {{ val['name'] }} <br> Relay {{ val['channel'] }}<br>
+        <span id="status-{{ i_channel }}">Loading...</span> <!-- Status placeholder -->
+      </th>
+      <td>
+        <div class="btn-group-lg" role="group" aria-label="Relay {{ i_channel }}">
+          <button type="button" class="btn btn-success" id="on-{{ i_channel }}" onclick="setRelay({ i_channel }, 'on');">On</button>
+          <button type="button" class="btn btn-danger" id="off-{{ i_channel }}" onclick="setRelay({ i_channel }, 'off');">Off</button>
+          <button type="button" class="btn btn-warning" id="reboot-{{ i_channel }}" onclick="setRelay({ i_channel }, 'reboot');">Reboot</button>
+          <button type="button" class="btn btn-info" id="toggle-{{ i_channel }}" onclick="toggleRelay({ i_channel });">Toggle</button>
+          <button type="button" class="btn btn-secondary" id="data-1" onclick="getRelayStatus({ i_channel });">Status</button>
+        </div>
+        <div class="form-group">
+          <label for="on-time-{{ i_channel }}">On Time:</label>
+          <input type="time" id="on-time-{{ i_channel }}" class="form-control" value="{{ val['on_time'] }}">
+        </div>
+        <div class="form-group">
+          <label for="off-time-{{ i_channel }}">Off Time:</label>
+          <input type="time" id="off-time-{{ i_channel }}" class="form-control" value="{{ val['off_time'] }}">
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="use-schedule-{{ i_channel }}" {% if val['use_schedule'] %}checked{% endif %}>
+          <label class="form-check-label" for="use-schedule-{{ i_channel }}">Use Schedule</label>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="updateSchedule({ i_channel });">Update Schedule</button>
+      </td>
+    </tr>
+    {% endif %}
     {% endfor %}
     <tr>
       <th scope="row">All</th>
       <td>
         <div class="btn-group-lg" role="group" aria-label="All">
-          <button type="button" class="btn btn-success btn-lg" id="all_on" onclick="setAll(true);">
-            All On
-          </button>
-          <button type="button" class="btn btn-danger btn-lg" id="all_off" onclick="setAll(false);">
-            All Off
-          </button>
-          <button type="button" class="btn btn-info btn-lg" id="all_off" onclick="toggleAll(false);">
-            Toggle All
-          </button>
+          <button type="button" class="btn btn-success btn-lg" id="all_on" onclick="setAll(true);">All On</button>
+          <button type="button" class="btn btn-danger btn-lg" id="all_off" onclick="setAll(false);">All Off</button>
+          <button type="button" class="btn btn-info btn-lg" id="toggle_all" onclick="toggleAll();">Toggle All</button>
         </div>
       </td>
     </tr>
   </tbody>
 </table>
-
-</div>
-
 {% endblock %}
